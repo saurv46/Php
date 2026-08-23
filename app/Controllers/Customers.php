@@ -23,13 +23,26 @@ class Customers extends BaseController
         $status = $this->request->getGet('status');
         $city = $this->request->getGet('city');
 
-        $builder = $this->customerModel->builder();
+        if (!empty($search)) {
+            $this->customerModel->groupStart()
+                ->like('name', $search)
+                ->orLike('email', $search)
+                ->groupEnd();
+        }
 
-        $customers = $builder->orderBy('id', 'DESC')->paginate(20);
+        if (!empty($status)) {
+            $this->customerModel->where('status', $status);
+        }
+
+        if (!empty($city)) {
+            $this->customerModel->like('city', $city);
+        }
+
+        $customers = $this->customerModel->orderBy('id', 'DESC')->paginate(20);
 
         $data = [
             'customers' => $customers,
-            'pager' => null,
+            'pager' => $this->customerModel->pager,
             'search' => $search,
             'status' => $status,
             'city' => $city
