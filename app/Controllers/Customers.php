@@ -19,9 +19,9 @@ class Customers extends BaseController
 
     public function index()
     {
-        $search = $this->request->getGet('search');
-        $status = $this->request->getGet('status');
-        $city = $this->request->getGet('city');
+        $search = trim((string) $this->request->getGet('search'));
+        $status = trim((string) $this->request->getGet('status'));
+        $city = trim((string) $this->request->getGet('city'));
 
         if (!empty($search)) {
             $this->customerModel->groupStart()
